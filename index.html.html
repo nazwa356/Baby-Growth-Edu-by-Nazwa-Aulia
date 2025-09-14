@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Baby Growth Edu by Bidan Nazwa Aulia</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Custom Styles & Animasi */
+        :root {
+            --bg-light: #FEFBF6;
+            --bg-white-light: #ffffff;
+            --text-dark-light: #1f2937;
+            --text-gray-light: #4b5563;
+            --shadow-light: 0 4px_15px rgba(0, 0, 0, 0.05);
+
+            --bg-dark: #111827;
+            --bg-white-dark: #1f2937;
+            --text-dark-dark: #f9fafb;
+            --text-gray-dark: #d1d5db;
+            --shadow-dark: 0 4px_15px rgba(0, 0, 0, 0.2);
+        }
+
+        html {
+            transition: background-color 0.3s, color 0.3s;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-dark-light);
+        }
+        
+        html.dark body {
+            background-color: var(--bg-dark);
+            color: var(--text-dark-dark);
+        }
+
+        .bg-white-dynamic { background-color: var(--bg-white-light); }
+        html.dark .bg-white-dynamic { background-color: var(--bg-white-dark); }
+        
+        .text-gray-dynamic { color: var(--text-gray-light); }
+        html.dark .text-gray-dynamic { color: var(--text-gray-dark); }
+
+        .shadow-dynamic { box-shadow: var(--shadow-light); }
+        html.dark .shadow-dynamic { box-shadow: var(--shadow-dark); }
+        
+        .btn-gradient {
+            background-image: linear-gradient(to right, #81D4FA, #F48FB1);
+            transition: all 0.3s ease;
+        }
+        .btn-gradient:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px_15px rgba(0, 0, 0, 0.1);
+        }
+        .nav-link {
+            position: relative;
+            transition: color 0.3s;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #F48FB1;
+            transition: width 0.3s;
+        }
+        .nav-link.active::after,
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        .fade-in {
+            animation: fadeInAnimation 0.8s ease-in-out forwards;
+        }
+        @keyframes fadeInAnimation {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Dark Mode Toggle */
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px; width: 18px;
+            left: 3px; bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .slider .sun-icon, .slider .moon-icon {
+             position: absolute;
+             top: 50%;
+             transform: translateY(-50%);
+             transition: opacity 0.4s;
+        }
+        .slider .sun-icon { left: 4px; opacity: 1; color: orange; }
+        .slider .moon-icon { right: 4px; opacity: 0; color: white; }
+
+        input:checked + .slider { background-color: #4A5568; }
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+        input:checked + .slider .sun-icon { opacity: 0; }
+        input:checked + .slider .moon-icon { opacity: 1; }
+        
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <!-- Header & Navigasi -->
+    <header class="bg-white-dynamic/80 backdrop-blur-lg shadow-md sticky top-0 z-50">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="#" onclick="showPage('home')" class="flex items-center gap-2 text-xl md:text-2xl font-bold text-pink-500">
+                Baby Growth Edu
+            </a>
+            <div class="hidden md:flex items-center space-x-4">
+                <a href="#" onclick="showPage('home')" class="nav-link active text-gray-dynamic" data-page="home">Beranda</a>
+                <a href="#" onclick="showPage('materi')" class="nav-link text-gray-dynamic" data-page="materi">Materi</a>
+                <a href="#" onclick="showPage('tanda-bahaya')" class="nav-link text-gray-dynamic" data-page="tanda-bahaya">Tanda Bahaya</a>
+                <a href="#" onclick="showPage('berita')" class="nav-link text-gray-dynamic" data-page="berita">Berita</a>
+                <a href="#" onclick="showPage('quiz')" class="nav-link text-gray-dynamic" data-page="quiz">Quiz</a>
+                <a href="#" onclick="showPage('tentang')" class="nav-link text-gray-dynamic" data-page="tentang">Tentang</a>
+                <label class="toggle-switch ml-4">
+                    <input type="checkbox" id="darkModeToggle">
+                    <span class="slider">
+                         <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+                         <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                    </span>
+                </label>
+            </div>
+            <button id="mobile-menu-button" class="md:hidden text-gray-dynamic">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+            </button>
+        </nav>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden px-6 pb-4 flex flex-col space-y-4">
+            <a href="#" onclick="showPage('home')" class="nav-link active text-gray-dynamic" data-page="home">Beranda</a>
+            <a href="#" onclick="showPage('materi')" class="nav-link text-gray-dynamic" data-page="materi">Materi Edukasi</a>
+            <a href="#" onclick="showPage('tanda-bahaya')" class="nav-link text-gray-dynamic" data-page="tanda-bahaya">Tanda Bahaya</a>
+            <a href="#" onclick="showPage('berita')" class="nav-link text-gray-dynamic" data-page="berita">Berita Terkini</a>
+            <a href="#" onclick="showPage('quiz')" class="nav-link text-gray-dynamic" data-page="quiz">Quiz</a>
+            <a href="#" onclick="showPage('tentang')" class="nav-link text-gray-dynamic" data-page="tentang">Tentang Kami</a>
+            <div class="flex items-center justify-between mt-4">
+                <span class="text-gray-dynamic">Mode Gelap</span>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="darkModeToggleMobile">
+                    <span class="slider">
+                         <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+                         <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                    </span>
+                </label>
+            </div>
+        </div>
+    </header>
+
+    <main id="main-content" class="container mx-auto px-6 py-8 min-h-screen">
+        
+        <!-- ======================= -->
+        <!--       HALAMAN BERANDA     -->
+        <!-- ======================= -->
+        <section id="home" class="page fade-in">
+            <div class="flex flex-col items-center gap-8 text-center">
+                <h1 class="text-3xl md:text-5xl font-bold leading-tight">Pantau Tumbuh Kembang Si Kecil</h1>
+                <p class="text-lg text-pink-500 font-semibold mt-2">bersama Bidan Nazwa Aulia</p>
+                <p class="mt-4 text-gray-dynamic max-w-2xl mx-auto">Selamat datang di media edukasi interaktif! Di sini, Anda bisa belajar mengenai setiap tahap emas pertumbuhan bayi dari 0 hingga 12 bulan, mendapatkan tips bermanfaat, dan menguji pemahaman melalui quiz seru.</p>
+                <button onclick="showPage('materi')" class="mt-8 px-8 py-3 text-white font-semibold rounded-full btn-gradient flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
+                    Mulai Belajar Sekarang
+                </button>
+            </div>
+            <div class="mt-16 text-center">
+                <h2 class="text-2xl font-bold mb-8">Fitur Unggulan Kami</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="bg-white-dynamic p-6 rounded-lg shadow-dynamic border-t-4 border-blue-300 text-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mx-auto text-blue-500 mb-4"><rect width="8" height="8" x="2" y="2" rx="2"/><path d="M14 2h6a2 2 0 0 1 2 2v6"/><path d="M2 14v6a2 2 0 0 0 2 2h6"/><path d="M14 14h6v6h-6z"/></svg>
+                        <h3 class="font-bold text-lg text-sky-600 dark:text-sky-400">Perkembangan & Pertumbuhan Bayi</h3>
+                        <p class="mt-2 text-gray-dynamic text-sm">Panduan lengkap perkembangan bayi yang disajikan secara terstruktur tiap bulannya.</p>
+                    </div>
+                    <div class="bg-white-dynamic p-6 rounded-lg shadow-dynamic border-t-4 border-pink-300 text-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mx-auto text-pink-500 mb-4"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+                        <h3 class="font-bold text-lg text-rose-600 dark:text-rose-400">Quiz Interaktif</h3>
+                        <p class="mt-2 text-gray-dynamic text-sm">Asah pengetahuan Anda dengan soal-soal menarik dan dapatkan skor instan.</p>
+                    </div>
+                    <div class="bg-white-dynamic p-6 rounded-lg shadow-dynamic border-t-4 border-yellow-300 text-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mx-auto text-yellow-500 mb-4"><path d="m21.73 18-8-14a2 2 0 0 0-3.46 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                        <h3 class="font-bold text-lg text-amber-600 dark:text-amber-400">Tanda Bahaya</h3>
+                        <p class="mt-2 text-gray-dynamic text-sm">Kenali 'Red Flags' atau tanda bahaya keterlambatan perkembangan pada si kecil.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ======================= -->
+        <!--   HALAMAN MATERI EDUKASI  -->
+        <!-- ======================= -->
+        <section id="materi" class="page hidden fade-in">
+            <h2 class="text-3xl font-bold text-center mb-4">Perkembangan Bayi 0-12 Bulan</h2>
+            <div class="mb-8 max-w-lg mx-auto">
+                 <div class="relative">
+                       <input type="text" id="materi-search" placeholder="Cari materi... (mis: merangkak)" class="w-full p-3 pl-10 border rounded-full bg-white-dynamic border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-blue-300 outline-none">
+                       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                 </div>
+            </div>
+            <div id="materi-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                
+                <div class="bg-white-dynamic p-6 rounded-lg shadow-dynamic border-l-4 border-blue-400 materi-card">
+                    <h3 class="font-bold text-xl flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12h.01"/><path d="M15 12h.01"/><path d="M10 16c.5.3 1.2.5 2 .5s1.5-.2 2-.5"/><path d="M19 6.3a9 9 0 0 1 1.8 3.9 2 2 0 0 1 0 3.6 9 9 0 0 1-17.6 0 2 2 0 0 1 0-3.6A9 9 0 0 1 12 3c2 0 3.8.6 5.3 1.7L19 6.3z"/></svg>Usia 0-2 Bulan</h3>
+                    <ul class="mt-3 text-gray-dynamic space-y-2 text-sm">
+                        <li><strong class="text-pink-500">Motorik Kasar:</strong> Mengangkat kepala sejenak, gerakan tangan & kaki acak.</li>
+                        <li><strong class="text-green-500">Motorik Halus:</strong> Menggenggam jari, mengikuti objek dengan mata.</li>
+                        <li><strong class="text-blue-500">Bahasa:</strong> Merespon suara, mengeluarkan suara 'aah' atau 'ooh'.</li>
+                        <li><strong class="text-orange-500">Sosial:</strong> Menatap wajah, mulai tersenyum sosial.</li>
+                    </ul>
+                </div>
+                <div class="bg-white-dynamic p-6 rounded-lg shadow-dynamic border-l-4 border-blue-400 materi-card">
+                    <h3 class="font-bold text-xl flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12h.01"/><path d="M15 12h.01"/><path d="M10 16c.5.3 1.2.5 2 .5s1.5-.2 2-.5"/><path d="M19 6.3a9 9 0 0 1 1.8 3.9 2 2 0 0 1 0 3.6 9 9 0 0 1-17.6 0 2 2 0 0 1 0-3.6A9 9 0 0 1 12 3c2 0 3.8.6 5.3 1.7L19 6.3z"/></svg>Usia 2-4 Bulan</h3>
+                    <ul class="mt-3 text-gray-dynamic space-y-2 text-sm">
+                        <li><strong class="text-pink-500">Motorik Kasar:</strong> Menahan kepala tegak, mulai miring dan mencoba tengkurap.</li>
+                        <li><strong class="text-green-500">Motorik Halus:</strong> Membuka tangan, meraih benda di dekatnya.</li>
+                        <li><strong class="text-blue-500">Bahasa:</strong> Tertawa kecil, mengoceh merespon ajakan bicara.</li>
+                        <li><strong class="text-orange-500">Sosial:</strong> Menikmati interaksi, mengenali wajah orang tua.</li>
+                    </ul>
+                </div>
+                <div class="bg-white-dynamic p-6 rounded-lg shadow-dynamic border-l-4 border-pink-400 materi-card">
+                    <h3 class="font-bold text-xl flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12h.01"/><path d="M15 12h.01"/><path d="M10 16c.5.3 1.2.5 2 .5s1.5-.2 2-.5"/><path d="M19 6.3a9 9 0 0 1 1.8 3.9 2 2 0 0 1 0 3.6 9 9 0 0 1-17.6 0 2 2 0 0 1 0-3.6A9 9 0 0 1 12 3c2 0 3.8.6 5.3 1.7L19 6.3z"/></svg>Usia 4-6 Bulan</h3>
+                    <ul class="mt-3 text-gray-dynamic space-y-2 text-sm">
+                        <li><strong class="text-pink-500">Motorik Kasar:</strong> Berguling, mulai belajar duduk dengan bantuan.</li>
+                        <li><strong class="text-green-500">Motorik Halus:</strong> Memindahkan benda dari satu tangan ke tangan lain.</li>
+                        <li><strong class="text-blue-500">Bahasa:</strong> Berceloteh (babbling) dengan suku kata 'ba-ba', 'ma-ma'.</li>
+                        <li><strong class="text-orange-500">Sosial:</strong> Senang melihat bayangannya di cermin.</li>
+                    </ul>
+                </div>
+                <div class="bg-white-dynamic p-6 rounded-lg shadow-dynamic border-l-4 border-pink-400 materi-card">
+                    <h3 class="font-bold text-xl flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12h.01"/><path d="M15 12h.01"/><path d="M10 16c.5.3 1.2.5 2 .5s1.5-.2 2-.5"/><path d="M19 6.3a9 9 0 0 1 1.8 3.9 2 2 0 0 1 0 3.6 9 9 0 0 1-17.6 0 2 2 0 0 1 0-3.6A9 9 0 0 1 12 3c2 0 3.8.6 5.3 1.7L19 6.3z"/></svg>Usia 6-9 Bulan</h3>
+                    <ul class="mt-3 text-gray-dynamic space-y-2 text-sm">
+                        <li><strong class="text-pink-500">Motorik Kasar:</strong> Duduk mandiri tanpa bantuan, mulai merangkak.</li>
+                        <li><strong class="text-green-500">Motorik Halus:</strong> Mengambil benda kecil dengan cara meraup.</li>
+                        <li><strong class="text-blue-500">Bahasa:</strong> Menoleh saat nama dipanggil, meniru suara.</li>
+                        <li><strong class="text-orange-500">Sosial:</strong> Cemas saat berpisah dengan orang tua (separation anxiety).</li>
+                    </ul>
+                </div>
+                <div class="bg-white-dynamic p-6 rounded-lg shadow-dynamic border-l-4 border-yellow-500 materi-card">
+                    <h3 class="font-bold text-xl flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12h.01"/><path d="M15 12h.01"/><path d="M10 16c.5.3 1.2.5 2 .5s1.5-.2 2-.5"/><path d="M19 6.3a9 9 0 0 1 1.8 3.9 2 2 0 0 1 0 3.6 9 9 0 0 1-17.6 0 2 2 0 0 1 0-3.6A9 9 0 0 1 12 3c2 0 3.8.6 5.3 1.7L19 6.3z"/></svg>Usia 9-12 Bulan</h3>
+                    <ul class="mt-3 text-gray-dynamic space-y-2 text-sm">
+                        <li><strong class="text-pink-500">Motorik Kasar:</strong> Berdiri dengan berpegangan, berjalan merambat.</li>
+                        <li><strong class="text-green-500">Motorik Halus:</strong> Menjepit benda kecil dengan ibu jari & telunjuk.</li>
+                        <li><strong class="text-blue-500">Bahasa:</strong> Mengucapkan 1-2 kata bermakna (mama/papa).</li>
+                        <li><strong class="text-orange-500">Sosial:</strong> Melambaikan tangan, meniru gerakan (tepuk tangan).</li>
+                    </ul>
+                </div>
+            </div>
+             <p id="materi-no-result" class="text-center text-gray-dynamic mt-8 hidden">Materi tidak ditemukan.</p>
+        </section>
+
+        <!-- ======================= -->
+        <!--   HALAMAN TANDA BAHAYA    -->
+        <!-- ======================= -->
+        <section id="tanda-bahaya" class="page hidden fade-in">
+            <h2 class="text-3xl font-bold text-center mb-8">Kenali Tanda Bahaya (Red Flags)</h2>
+            <div class="space-y-6 max-w-4xl mx-auto">
+                <p class="text-center text-gray-dynamic mb-8">Tanda bahaya adalah kondisi yang perlu diwaspadai jika bayi belum menunjukan kemampuan tertentu pada rentang usianya. Segera konsultasikan dengan dokter atau bidan jika menemukan tanda-tanda ini.</p>
+                <div class="bg-white-dynamic p-6 rounded-lg shadow-dynamic">
+                    <h3 class="font-bold text-xl text-red-600 dark:text-red-500 flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Usia 0-3 Bulan</h3>
+                    <ul class="list-disc list-inside mt-3 text-gray-dynamic space-y-1 pl-4">
+                        <li>Tidak merespon suara keras.</li>
+                        <li>Tidak mengikuti benda bergerak dengan matanya.</li>
+                        <li>Tidak tersenyum pada orang lain di usia 3 bulan.</li>
+                        <li>Kepala terkulai (lemah) saat diangkat.</li>
+                    </ul>
+                </div>
+                <div class="bg-white-dynamic p-6 rounded-lg shadow-dynamic">
+                    <h3 class="font-bold text-xl text-red-600 dark:text-red-500 flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Usia 4-6 Bulan</h3>
+                    <ul class="list-disc list-inside mt-3 text-gray-dynamic space-y-1 pl-4">
+                        <li>Tidak berusaha meraih benda di sekitarnya.</li>
+                        <li>Tidak berguling ke salah satu arah (perut ke punggung atau sebaliknya) di usia 6 bulan.</li>
+                        <li>Tidak mengeluarkan suara tawa atau pekikan.</li>
+                        <li>Terlihat sangat kaku atau sangat lunglai.</li>
+                    </ul>
+                </div>
+                <div class="bg-white-dynamic p-6 rounded-lg shadow-dynamic">
+                    <h3 class="font-bold text-xl text-red-600 dark:text-red-500 flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Usia 7-12 Bulan</h3>
+                    <ul class="list-disc list-inside mt-3 text-gray-dynamic space-y-1 pl-4">
+                        <li>Tidak bisa duduk tanpa bantuan di usia 9 bulan.</li>
+                        <li>Tidak mengoceh ("mamama" atau "bababa").</li>
+                        <li>Tidak merespon ketika namanya dipanggil.</li>
+                        <li>Tidak merangkak atau berusaha menarik badan untuk berdiri di usia 12 bulan.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- ======================= -->
+        <!--  HALAMAN BERITA TERKINI   -->
+        <!-- ======================= -->
+        <section id="berita" class="page hidden fade-in">
+            <h2 class="text-3xl font-bold text-center mb-8">Berita & Info Terkini</h2>
+            <div id="berita-list" class="space-y-6">
+                <div class="bg-white-dynamic p-6 rounded-lg shadow-dynamic flex flex-col md:flex-row items-start gap-4 berita-card">
+                    <img src="https://placehold.co/150x150/E0F7FA/01579B?text=GIZI" alt="Gizi" class="w-full md:w-32 h-32 rounded-md object-cover">
+                    <div>
+                        <span class="text-xs font-semibold text-blue-500">GIZI & NUTRISI • 14 Sep 2025</span>
+                        <h3 class="font-bold text-xl mt-1">Kesehatan Usus Bayi Pengaruhi Imunitas</h3>
+                        <p class="mt-2 text-gray-dynamic text-sm">Penelitian terbaru menunjukkan bahwa mikrobioma usus yang sehat pada 12 bulan pertama kehidupan berperan krusial dalam membangun sistem kekebalan tubuh yang kuat hingga dewasa.</p>
+                    </div>
+                </div>
+                 <div class="bg-white-dynamic p-6 rounded-lg shadow-dynamic flex flex-col md:flex-row items-start gap-4 berita-card">
+                    <img src="https://placehold.co/150x150/FCE4EC/880E4F?text=STIMULASI" alt="Stimulasi" class="w-full md:w-32 h-32 rounded-md object-cover">
+                    <div>
+                        <span class="text-xs font-semibold text-pink-500">STIMULASI • 12 Sep 2025</span>
+                        <h3 class="font-bold text-xl mt-1">Pentingnya 'Tummy Time' untuk Otot</h3>
+                        <p class="mt-2 text-gray-dynamic text-sm">Para ahli kembali mengingatkan orang tua tentang pentingnya sesi tengkurap (tummy time) saat bayi terbangun untuk memperkuat otot leher dan punggung serta mencegah sindrom kepala datar.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ======================= -->
+        <!--       HALAMAN QUIZ        -->
+        <!-- ======================= -->
+        <section id="quiz" class="page hidden fade-in">
+            <div class="max-w-2xl mx-auto bg-white-dynamic p-8 rounded-xl shadow-2xl">
+                <div id="quiz-container">
+                    <h2 class="text-2xl font-bold text-center mb-2">Quiz Tumbuh Kembang</h2>
+                    <p class="text-center text-gray-dynamic mb-6">Uji pengetahuan Anda!</p>
+                    <div id="question" class="text-lg font-semibold mb-4"></div>
+                    <div id="options" class="space-y-3"></div>
+                    <div id="feedback" class="mt-4 text-sm font-semibold"></div>
+                    <div id="explanation" class="mt-4 p-4 bg-blue-50 dark:bg-gray-700/50 border border-blue-200 dark:border-gray-600 rounded-lg text-sm text-gray-dynamic hidden"></div>
+                    <button id="next-btn" class="w-full mt-6 py-3 text-white font-semibold rounded-lg btn-gradient hidden">Soal Berikutnya</button>
+                </div>
+                <div id="result-container" class="hidden text-center">
+                    <h2 class="text-2xl font-bold">Hasil Quiz Anda</h2>
+                    <p class="mt-4 text-lg">Anda berhasil menjawab <span id="score" class="font-bold"></span> dari <span id="total-questions" class="font-bold"></span> pertanyaan!</p>
+                    <p id="result-message" class="mt-2 font-semibold"></p>
+                    <button onclick="restartQuiz()" class="mt-8 px-8 py-3 text-white font-semibold rounded-full btn-gradient">Ulangi Quiz</button>
+                </div>
+            </div>
+        </section>
+
+        
+        <!-- ======================= -->
+        <!--   HALAMAN TENTANG KAMI  -->
+        <!-- ======================= -->
+        <section id="tentang" class="page hidden fade-in">
+            <div class="max-w-3xl mx-auto text-center">
+                <img src="https://placehold.co/150x150/F48FB1/FFFFFF?text=NA" alt="Foto Bidan Nazwa Aulia" class="w-32 h-32 rounded-full mx-auto ring-4 ring-pink-200 dark:ring-pink-800 shadow-lg">
+                <h2 class="text-3xl font-bold mt-6">Tentang Baby Growth Edu</h2>
+                <p class="text-xl text-gray-dynamic mt-1">oleh Bidan Nazwa Aulia</p>
+                <p class="mt-6 text-gray-dynamic leading-relaxed">
+                    Website "Baby Growth Edu" ini dibuat sebagai bagian dari proyek edukasi digital. Pembuatan website ini bertujuan untuk memenuhi tugas mata kuliah Sistem Teknologi Informasi oleh Pa Deru Merah Laut, Poltekkes Kemenkes Bandung.
+                </p>
+                <p class="mt-4 text-gray-dynamic leading-relaxed">
+                    Semua materi yang disajikan dirangkum dari berbagai sumber literatur kebidanan yang kredibel. Harapannya, platform ini dapat membantu meningkatkan pemahaman mengenai pentingnya memantau pertumbuhan dan perkembangan bayi pada 1000 Hari Pertama Kehidupan.
+                </p>
+            </div>
+        </section>
+
+    </main>
+    
+    <!-- Footer -->
+    <footer class="bg-white-dynamic shadow-inner mt-16">
+        <div class="container mx-auto px-6 py-8 text-center text-gray-dynamic">
+            <p class="text-sm">&copy; 2025 Baby Growth Edu by Nazwa Aulia. All Rights Reserved.</p>
+            <p class="text-sm mt-2">Untuk keperluan edukasi. Selalu konsultasikan dengan tenaga kesehatan profesional.</p>
+            <div class="mt-4">
+                 <p class="text-xs">Referensi: Kemenkes RI, WHO, UNICEF, Buku KIA 2024</p>
+            </div>
+        </div>
+    </footer>
+
+
+    <script>
+        // --- LOGIKA UTAMA APLIKASI ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const docHtml = document.documentElement;
+
+            // Navigasi Halaman
+            const pages = document.querySelectorAll('.page');
+            const navLinks = document.querySelectorAll('.nav-link');
+            window.showPage = function(pageId) {
+                pages.forEach(page => page.classList.add('hidden'));
+                const targetPage = document.getElementById(pageId);
+                if (targetPage) {
+                    targetPage.classList.remove('hidden');
+                    window.scrollTo(0, 0); 
+                }
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.dataset.page === pageId) link.classList.add('active');
+                });
+                document.getElementById('mobile-menu').classList.add('hidden');
+            }
+            
+            // Mobile Menu
+            document.getElementById('mobile-menu-button').addEventListener('click', () => {
+                document.getElementById('mobile-menu').classList.toggle('hidden');
+            });
+
+            // --- SCRIPT DARK MODE ---
+            const darkModeToggle = document.getElementById('darkModeToggle');
+            const darkModeToggleMobile = document.getElementById('darkModeToggleMobile');
+            
+            const applyTheme = (theme) => {
+                if (theme === 'dark') {
+                    docHtml.classList.add('dark');
+                    darkModeToggle.checked = true;
+                    darkModeToggleMobile.checked = true;
+                } else {
+                    docHtml.classList.remove('dark');
+                    darkModeToggle.checked = false;
+                    darkModeToggleMobile.checked = false;
+                }
+            };
+
+            const toggleTheme = () => {
+                const currentTheme = docHtml.classList.contains('dark') ? 'light' : 'dark';
+                localStorage.setItem('theme', currentTheme);
+                applyTheme(currentTheme);
+            };
+
+            // Event listeners untuk kedua toggle
+            darkModeToggle.addEventListener('change', toggleTheme);
+            darkModeToggleMobile.addEventListener('change', toggleTheme);
+            
+            // Inisialisasi tema saat halaman dimuat
+            const savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            applyTheme(savedTheme);
+
+
+            // --- SCRIPT PENCARIAN MATERI ---
+            const searchInput = document.getElementById('materi-search');
+            const materiCards = document.querySelectorAll('.materi-card');
+            const noResultMsg = document.getElementById('materi-no-result');
+
+            searchInput.addEventListener('input', (e) => {
+                const searchTerm = e.target.value.toLowerCase();
+                let found = false;
+                materiCards.forEach(card => {
+                    const cardText = card.textContent.toLowerCase();
+                    if (cardText.includes(searchTerm)) {
+                        card.style.display = 'block';
+                        found = true;
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+                noResultMsg.classList.toggle('hidden', found);
+            });
+
+
+            // --- SCRIPT QUIZ INTERAKTIF ---
+            const quizData = [
+                {
+                    question: "Pada usia berapa bayi umumnya mulai bisa duduk sendiri tanpa bantuan?",
+                    options: ["2-4 bulan", "4-6 bulan", "6-9 bulan", "9-12 bulan"],
+                    correct: 2,
+                    explanation: "Bayi biasanya mengembangkan kekuatan otot punggung dan leher yang cukup untuk duduk mandiri tanpa bantuan antara usia 6 hingga 9 bulan."
+                },
+                {
+                    question: "Kemampuan menjepit benda kecil menggunakan ibu jari dan telunjuk (pincer grasp) adalah milestone pada rentang usia...",
+                    options: ["4-6 bulan", "6-9 bulan", "9-12 bulan", "12-15 bulan"],
+                    correct: 2,
+                    explanation: "Pincer grasp adalah tonggak perkembangan motorik halus yang penting, biasanya muncul antara usia 9 hingga 12 bulan."
+                },
+                {
+                    question: "Apa sebutan untuk kecemasan yang dirasakan bayi saat berpisah dengan orang tua atau pengasuhnya?",
+                    options: ["Stranger Anxiety", "Separation Anxiety", "Social Anxiety", "General Anxiety"],
+                    correct: 1,
+                    explanation: "Separation Anxiety adalah fase normal perkembangan emosional dimana bayi merasa cemas ketika ditinggal oleh orang yang dikenalnya, biasanya memuncak antara 6-9 bulan."
+                },
+                {
+                    question: "Manakah yang BUKAN merupakan 'red flag' atau tanda bahaya pada bayi usia 4-6 bulan?",
+                    options: ["Tidak berusaha meraih benda", "Tidak bisa berguling", "Terlihat sangat kaku", "Belum bisa berjalan"],
+                    correct: 3,
+                    explanation: "Berjalan adalah milestone untuk usia 9-15 bulan. Belum bisa berjalan di usia 4-6 bulan adalah hal yang normal. Tiga pilihan lainnya adalah tanda bahaya pada rentang usia tersebut."
+                },
+                 {
+                    question: "Istilah 'babbling' atau berceloteh (mis: 'ba-ba', 'da-da') umumnya dimulai pada usia?",
+                    options: ["0-2 bulan", "2-4 bulan", "4-6 bulan", "9-12 bulan"],
+                    correct: 2,
+                    explanation: "Fase 'babbling' adalah tahap awal perkembangan bahasa yang penting, di mana bayi mulai melatih organ bicaranya. Ini biasanya terjadi pada usia 4-6 bulan."
+                }
+            ];
+
+            const quizContainer = document.getElementById('quiz-container');
+            const resultContainer = document.getElementById('result-container');
+            const questionEl = document.getElementById('question');
+            const optionsEl = document.getElementById('options');
+            const feedbackEl = document.getElementById('feedback');
+            const explanationEl = document.getElementById('explanation');
+            const nextBtn = document.getElementById('next-btn');
+            const scoreEl = document.getElementById('score');
+            const totalQuestionsEl = document.getElementById('total-questions');
+            const resultMessageEl = document.getElementById('result-message');
+            
+            let currentQuiz = 0;
+            let score = 0;
+
+            function loadQuiz() {
+                const currentQuizData = quizData[currentQuiz];
+                questionEl.innerText = `${currentQuiz + 1}. ${currentQuizData.question}`;
+                optionsEl.innerHTML = '';
+                currentQuizData.options.forEach((option, index) => {
+                    const button = document.createElement('button');
+                    button.innerText = option;
+                    button.classList.add('w-full', 'p-3', 'text-left', 'rounded-lg', 'border', 'border-gray-300', 'dark:border-gray-600', 'hover:bg-gray-100', 'dark:hover:bg-gray-700', 'transition-colors', 'duration-200');
+                    button.addEventListener('click', () => selectAnswer(index, button));
+                    optionsEl.appendChild(button);
+                });
+                feedbackEl.textContent = '';
+                explanationEl.classList.add('hidden');
+                nextBtn.classList.add('hidden');
+            }
+
+            function selectAnswer(selectedIndex, button) {
+                const correctIndex = quizData[currentQuiz].correct;
+                const buttons = optionsEl.querySelectorAll('button');
+
+                buttons.forEach((btn, idx) => {
+                    btn.disabled = true;
+                    if (idx === correctIndex) {
+                        btn.classList.add('bg-green-200', 'dark:bg-green-800', 'border-green-500');
+                    } else if (idx === selectedIndex) {
+                        btn.classList.add('bg-red-200', 'dark:bg-red-800', 'border-red-500');
+                    }
+                });
+
+                if (selectedIndex === correctIndex) {
+                    score++;
+                    feedbackEl.textContent = 'Jawaban Benar!';
+                    feedbackEl.className = 'mt-4 text-sm font-semibold text-green-600 dark:text-green-400';
+                } else {
+                    feedbackEl.textContent = 'Jawaban Salah!';
+                    feedbackEl.className = 'mt-4 text-sm font-semibold text-red-600 dark:text-red-400';
+                }
+
+                explanationEl.textContent = quizData[currentQuiz].explanation;
+                explanationEl.classList.remove('hidden');
+                nextBtn.classList.remove('hidden');
+            }
+
+            nextBtn.addEventListener('click', () => {
+                currentQuiz++;
+                if (currentQuiz < quizData.length) {
+                    loadQuiz();
+                } else {
+                    showResults();
+                }
+            });
+
+            function showResults() {
+                quizContainer.classList.add('hidden');
+                resultContainer.classList.remove('hidden');
+                scoreEl.textContent = score;
+                totalQuestionsEl.textContent = quizData.length;
+                let message = '';
+                const percentage = (score / quizData.length) * 100;
+                if (percentage === 100) {
+                    message = 'Sempurna! Pengetahuan Anda luar biasa!';
+                    resultMessageEl.className = 'mt-2 font-semibold text-green-600 dark:text-green-400';
+                } else if (percentage >= 75) {
+                    message = 'Hebat! Anda sudah sangat paham.';
+                    resultMessageEl.className = 'mt-2 font-semibold text-blue-600 dark:text-blue-400';
+                } else if (percentage >= 50) {
+                    message = 'Bagus! Terus tingkatkan lagi pengetahuan Anda.';
+                    resultMessageEl.className = 'mt-2 font-semibold text-yellow-600 dark:text-yellow-400';
+                } else {
+                    message = 'Jangan khawatir, coba pelajari lagi materinya dan ulangi quiz.';
+                    resultMessageEl.className = 'mt-2 font-semibold text-red-600 dark:text-red-400';
+                }
+                resultMessageEl.textContent = message;
+            }
+
+            window.restartQuiz = function() {
+                currentQuiz = 0;
+                score = 0;
+                resultContainer.classList.add('hidden');
+                quizContainer.classList.remove('hidden');
+                loadQuiz();
+            }
+
+            // Inisialisasi Quiz
+            loadQuiz();
+        });
+    </script>
+</body>
+</html>
